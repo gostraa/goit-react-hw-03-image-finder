@@ -1,6 +1,7 @@
 import { Component } from 'react';
-import styles from './Searchbar.style.module.css';
 import { toast } from 'react-toastify';
+import styles from './Searchbar.style.module.css';
+import PropTypes from 'prop-types';
 export class Searchbar extends Component {
   state = {
     input: '',
@@ -43,3 +44,7 @@ export class Searchbar extends Component {
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

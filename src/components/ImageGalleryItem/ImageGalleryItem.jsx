@@ -3,16 +3,14 @@ import styles from './ImageGalleryItem.module.css';
 
 export const ImageGalleryItem = ({ url, tags, onClick }) => {
   return (
-    <>
-      <li className={styles['ImageGalleryItem']}>
-        <img
-          src={url}
-          alt={tags}
-          className={styles['ImageGalleryItem-image']}
-          onClick={() => onClick(url)}
-        />
-      </li>
-    </>
+    <li className={styles['ImageGalleryItem']}>
+      <img
+        src={url}
+        alt={tags}
+        className={styles['ImageGalleryItem-image']}
+        onClick={() => onClick(url)}
+      />
+    </li>
   );
 };
 
