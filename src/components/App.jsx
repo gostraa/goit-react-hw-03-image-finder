@@ -25,7 +25,10 @@ export class App extends Component {
       inputValue: value,
       page: 1,
       images: [],
-      status: 'pending',
+      modalImg: '',
+      status: 'idle',
+      showBtn: false,
+      showModal: false,
     });
   };
 
@@ -35,17 +38,15 @@ export class App extends Component {
     fetchImages(inputValue, page)
       .then(response => {
         if (response.hits.length === 0) {
-          this.setState({
-            showBtn: false,
-          });
           toast.error('нажаль, нічого не знайдено 🥺');
+          return;
         }
 
-        this.setState({
-          images: response.hits,
+        this.setState(prevState => ({
+          images: [...prevState.images, ...response.hits],
           status: 'resolved',
           showBtn: page < Math.ceil(response.totalHits / 12),
-        });
+        }));
       })
       .catch(error => this.setState({ status: 'rejected' }));
   };
@@ -57,30 +58,18 @@ export class App extends Component {
   };
 
   componentDidUpdate(_, prevState) {
-    if (prevState.inputValue !== this.state.inputValue) {
+    if (
+      prevState.inputValue !== this.state.inputValue ||
+      (prevState.page !== this.state.page && this.state.page > 1)
+    ) {
       this.renderImages();
     }
-    if (prevState.page !== this.state.page && this.state.page > 1) {
-      this.renderLoadMore();
-    }
   }
-
-  renderLoadMore = () => {
-    const { inputValue, page } = this.state;
-
-    fetchImages(inputValue, page)
-      .then(response => {
-        this.setState(prevState => ({
-          images: [...prevState.images, ...response.hits],
-          showBtn: page < Math.ceil(response.totalHits / 12),
-        }));
-      })
-      .catch(error => this.setState({ status: 'rejected' }));
-  };
 
   toggleModal = () => {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
+
   getLargeImg = url => {
     this.toggleModal();
     this.setState({ modalImg: url });
